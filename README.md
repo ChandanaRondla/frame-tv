@@ -2,6 +2,8 @@
 
 A TV-first, remote-navigable discovery interface built with **React, TypeScript, Redux Toolkit, GraphQL Yoga, Node.js, and TMDB**. This is an independent educational portfolio project, not affiliated with Netflix or TMDB.
 
+**[Live Demo](https://frame-tv.onrender.com)** | **[Source Code](https://github.com/ChandanaRondla/frame-tv)**
+
 ## Preview
 
 ![FRAME TV discovery interface](docs/media/discovery.png)
