@@ -124,3 +124,28 @@ Measurements were collected in headless desktop Chromium.
 Navigation measures synthetic key-event-to-focus latency.
 Scrolling measures animation-frame callback timing, not GPU-rendered
 frames. Fire TV and Tizen hardware have not been tested.
+
+## Streaming Player
+
+FRAME / TV includes an integrated adaptive streaming player powered by Shaka Player, with a playable version of the open-license short film *Sintel*.
+
+### Playback Features
+
+- **Adaptive streaming:** MPEG-DASH playback using Shaka Player.
+- **Fullscreen experience:** Expand the player while retaining playback controls, seeking, subtitles, and the progress bar.
+- **Keyboard shortcuts:** Press `F` to toggle fullscreen, `Space` to play or pause, and the left/right arrow keys to seek backward or forward.
+- **Playback controls:** Play/Pause, 10-second rewind and forward, and timeline seeking.
+- **English subtitles:** Toggle captions on or off using the CC control or the `C` keyboard shortcut.
+- **Continue Watching:** Save playback progress locally and resume from the last watched position.
+- **Playback feedback:** Display loading and buffering states during streaming.
+
+### Try It Live
+
+1. Open [FRAME / TV](https://frame-tv.onrender.com).
+2. Select **Play Film** or **Resume Film** on the discovery screen.
+3. Play *Sintel* and explore the streaming controls.
+4. Enter fullscreen using the **Fullscreen** button or the `F` shortcut.
+5. Close and reopen the player to test Continue Watching.
+
+The streaming demo uses the publicly available *Sintel* DASH asset hosted by the Shaka Player demo project. Playback progress is stored in the browser's local storage.
+
