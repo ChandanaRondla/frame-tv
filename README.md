@@ -2,6 +2,12 @@
 
 A TV-first, remote-navigable discovery interface built with **React, TypeScript, Redux Toolkit, GraphQL Yoga, Node.js, and TMDB**. This is an independent educational portfolio project, not affiliated with Netflix or TMDB.
 
+## Preview
+
+![FRAME TV discovery interface](docs/media/discovery.png)
+
+[Watch the interactive demo](docs/media/demo.mp4)
+
 ## Features
 
 - Forty themed discovery rows populated from TMDB metadata (results vary over time).
