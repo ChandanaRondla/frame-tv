@@ -61,7 +61,7 @@ The browser never receives the TMDB access token. The server fetches 40 categori
 
 ## Performance and test boundaries
 
-The app uses CSS content-visibility and lazy-loaded images, but does not yet implement viewport-aware row virtualization. **No real Fire TV/Tizen performance claims are made.** CPU-throttled Chrome tests and input-to-focus latency benchmarking belong in the separate performance lab. FPS, heap usage, input latency, and full-bundle budgets must be measured before publishing numeric claims. The number of *unique* TMDB titles is reported at runtime; 2,000+ unique titles is not guaranteed by 40 single-page categories.
+The app uses CSS content-visibility and lazy-loaded images, but does not yet implement viewport-aware row virtualization. **No real Fire TV/Tizen performance claims are made.** CPU-throttled Chrome tests and input-to-focus latency benchmarking belong in the separate performance lab.  The number of *unique* TMDB titles is reported at runtime; 2,000+ unique titles is not guaranteed by 40 single-page categories.
 
 ## Trailer licensing
 
@@ -82,7 +82,39 @@ This product uses the TMDB API but is not endorsed or certified by TMDB. Add the
 
 ## Current limitations
 
-- The existing five tests are source-level checks, not end-to-end tests.
-- Filters and keyboard navigation require manual regression testing.
+
+
 - No licensed HLS playback or Shaka Player integration is included.
-- No TV hardware validation or measured FPS, input latency, or heap results are included.
+
+
+## Verified Browser Tests
+
+Five Playwright Chromium tests passed:
+
+- Live TMDB catalog loading
+- Header and category filtering
+- Global search across movies and series
+- Movie details opening and closing
+- D-pad navigation and focus restoration
+
+Run with the API and frontend servers active:
+
+    npx playwright test
+
+## Desktop Performance Measurements
+
+| Metric | Result |
+|---|---:|
+| Navigation P50 | 15.6 ms |
+| Navigation P95 | 40.1 ms |
+| Maximum navigation latency | 44.5 ms |
+| Successful navigation samples | 50/50 |
+| Scrolling frame callback rate | 60.0 FPS |
+| P95 frame interval | 16.7 ms |
+| JavaScript heap snapshot | 57.51 MB |
+| Production JavaScript (gzip) | 81.90 KB |
+
+Measurements were collected in headless desktop Chromium.
+Navigation measures synthetic key-event-to-focus latency.
+Scrolling measures animation-frame callback timing, not GPU-rendered
+frames. Fire TV and Tizen hardware have not been tested.
