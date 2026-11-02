@@ -31,6 +31,8 @@ function saveProgress(value:number){
 
 export default function DemoCinema({onClose}:{onClose:()=>void}){
   const videoRef=useRef<HTMLVideoElement>(null);
+  const screenRef=useRef<HTMLDivElement>(null);
+  const [fullscreen,setFullscreen]=useState(false);
   const playerRef=useRef<shaka.Player|null>(null);
   const closeRef=useRef<HTMLButtonElement>(null);
   const progressRef=useRef(0);
@@ -143,6 +145,30 @@ export default function DemoCinema({onClose}:{onClose:()=>void}){
     return()=>window.clearInterval(interval);
   },[ready]);
 
+  useEffect(()=>{
+    function syncFullscreen(){
+      setFullscreen(document.fullscreenElement===screenRef.current);
+    }
+
+    document.addEventListener('fullscreenchange',syncFullscreen);
+    return()=>document.removeEventListener('fullscreenchange',syncFullscreen);
+  },[]);
+
+  async function toggleFullscreen(){
+    const screen=screenRef.current;
+    if(!screen)return;
+
+    try{
+      if(document.fullscreenElement){
+        await document.exitFullscreen();
+      }else{
+        await screen.requestFullscreen();
+      }
+    }catch{
+      setStatus('Fullscreen is unavailable in this browser.');
+    }
+  }
+
   function togglePlayback(){
     const video=videoRef.current;
     if(!video||!ready)return;
@@ -181,6 +207,21 @@ export default function DemoCinema({onClose}:{onClose:()=>void}){
     if(!next)player.selectTextTrack(null);
     setCaptionsEnabled(next);
   }
+
+  useEffect(()=>{
+    function handleFullscreenKey(event:globalThis.KeyboardEvent){
+      if(event.key.toLowerCase()==='f' &&
+         !(event.target instanceof HTMLInputElement) &&
+         !(event.target instanceof HTMLTextAreaElement)){
+        event.preventDefault();
+        event.stopPropagation();
+        void toggleFullscreen();
+      }
+    }
+
+    document.addEventListener('keydown',handleFullscreenKey,true);
+    return()=>document.removeEventListener('keydown',handleFullscreenKey,true);
+  });
 
   function handleClose(){
     const video=videoRef.current;
@@ -224,7 +265,7 @@ export default function DemoCinema({onClose}:{onClose:()=>void}){
       aria-label="Sintel video player"
       onKeyDown={handleKeyDown}
     >
-      <section className="cinema-panel">
+      <section ref={screenRef} className="cinema-panel">
         <div className="cinema-top">
           <div>
             <p className="eyebrow">FRAME / TV · NOW PLAYING</p>
@@ -269,6 +310,7 @@ export default function DemoCinema({onClose}:{onClose:()=>void}){
             }}
           />
           {buffering&&<div className="cinema-buffering">Buffering…</div>}
+
         </div>
 
         <div className="cinema-controls">
@@ -294,6 +336,13 @@ export default function DemoCinema({onClose}:{onClose:()=>void}){
             onClick={toggleCaptions}
           >
             CC {captionsEnabled?'On':'Off'}
+          </button>
+
+          <button
+            onClick={()=>void toggleFullscreen()}
+            aria-label={fullscreen?'Exit fullscreen':'Enter fullscreen'}
+          >
+            {fullscreen?'Exit Fullscreen':'Fullscreen'}
           </button>
 
           <span className="cinema-time">
@@ -331,7 +380,7 @@ export default function DemoCinema({onClose}:{onClose:()=>void}){
         </p>
 
         <p className="cinema-help">
-          Left/Right: seek · Space: pause/resume · C: captions · Escape: close
+          Left/Right: seek · Space: pause/resume · C: captions · F: fullscreen · Escape: close
         </p>
       </section>
     </div>
