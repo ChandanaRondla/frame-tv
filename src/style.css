@@ -35,3 +35,198 @@ header nav button[aria-current="page"] {
 header nav button[aria-current="page"] {
   border-bottom: 2px solid #a9ddec;
 }
+
+/* Demo Cinema */
+.cinema-trigger{
+  border:1px solid #ffffff35;
+  background:#ffffff12;
+  color:#fff;
+  border-radius:8px;
+  padding:10px 16px;
+  cursor:pointer;
+  font:inherit;
+}
+.cinema-trigger:hover,.cinema-trigger:focus-visible{
+  border-color:#fff;
+  outline:2px solid #fff;
+  outline-offset:2px;
+}
+.cinema-overlay{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  background:rgba(4,7,13,.96);
+  display:grid;
+  place-items:center;
+  padding:24px;
+}
+.cinema-panel{
+  width:min(1100px,100%);
+  max-height:95vh;
+  overflow:auto;
+  color:#fff;
+}
+.cinema-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:20px;
+  margin-bottom:20px;
+}
+.cinema-top h2{margin:6px 0}
+.cinema-screen{
+  position:relative;
+  width:100%;
+  aspect-ratio:16/9;
+  background:#000;
+  border-radius:12px;
+  overflow:hidden;
+}
+.cinema-screen video{
+  width:100%;
+  height:100%;
+  display:block;
+}
+.cinema-buffering{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  background:#0008;
+  pointer-events:none;
+}
+.cinema-controls{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:18px;
+}
+.cinema-controls button{
+  cursor:pointer;
+  padding:10px 18px;
+}
+.cinema-time{margin-left:auto}
+.cinema-progress{
+  width:100%;
+  margin-top:18px;
+  accent-color:#e50914;
+}
+.cinema-help{
+  color:#aeb6c7;
+  font-size:13px;
+  margin-top:12px;
+}
+
+/* Playable film collection */
+.playable-collection{
+  padding:32px max(5%,24px);
+}
+.playable-heading{
+  margin-bottom:18px;
+}
+.playable-heading h2{
+  font-size:24px;
+  margin:6px 0;
+}
+.playable-card{
+  display:block;
+  width:min(360px,100%);
+  padding:0;
+  overflow:hidden;
+  text-align:left;
+  border:1px solid #ffffff30;
+  border-radius:12px;
+  background:#151b27;
+  color:#fff;
+  cursor:pointer;
+  transition:transform .2s,border-color .2s;
+}
+.playable-card:hover,
+.playable-card:focus-visible{
+  transform:scale(1.025);
+  border-color:#fff;
+  outline:2px solid #fff;
+  outline-offset:3px;
+}
+.playable-art{
+  aspect-ratio:16/9;
+  background:
+    radial-gradient(circle at 70% 35%,#495f70,#192334 55%,#080d16);
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding:24px;
+}
+.playable-art strong{
+  font-size:42px;
+  letter-spacing:.16em;
+}
+.playable-art span{
+  font-size:10px;
+  letter-spacing:.12em;
+  margin-top:8px;
+}
+.playable-description{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  padding:18px 20px;
+}
+.playable-description strong{
+  font-size:20px;
+}
+.playable-description span{
+  color:#bbc4d2;
+  font-size:13px;
+}
+.playable-description span:last-child{
+  color:#fff;
+  font-weight:700;
+}
+
+/* Playback accessibility and resume */
+.cinema-controls button:focus-visible,
+.cinema-top button:focus-visible,
+.cinema-progress:focus-visible{
+  outline:3px solid #fff;
+  outline-offset:4px;
+}
+
+.cinema-controls button[disabled]{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+.cinema-controls button[aria-pressed="true"]{
+  background:#e50914;
+  border-color:#e50914;
+  color:#fff;
+}
+
+.cinema-resume-note{
+  color:#b6e7ec;
+  font-size:14px;
+  margin-top:12px;
+}
+
+.cinema-screen video::cue{
+  color:white;
+  background:rgba(0,0,0,.78);
+  font-size:110%;
+  text-shadow:0 2px 4px black;
+}
+
+.playable-progress{
+  height:5px;
+  width:100%;
+  background:#ffffff30;
+  border-radius:5px;
+  overflow:hidden;
+  margin-top:6px;
+}
+.playable-progress>div{
+  height:100%;
+  background:#e50914;
+  border-radius:5px;
+}
