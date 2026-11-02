@@ -1,5 +1,7 @@
 import 'dotenv/config';
 import {createServer} from 'node:http';
+import {readFile} from 'node:fs/promises';
+import {resolve, sep, extname} from 'node:path';
 import {createYoga,createSchema} from 'graphql-yoga';
 const token=process.env.TMDB_ACCESS_TOKEN;
 const base='https://api.themoviedb.org/3';
@@ -34,4 +36,62 @@ async function trailer(kind,id){const data=await tmdb(`${kind}/${id}/videos`);co
 const schema=createSchema({typeDefs:`type Title {id:ID!,tmdbId:Int!,kind:String!,name:String!,year:Int!,genre:String!,description:String!,poster:String,backdrop:String,rating:Float!} type Row {id:Int!,label:String!,items:[Title!]!} type Catalog {rows:[Row!]!,uniqueTitles:Int!,source:String!} type Trailer {key:String!,name:String!,official:Boolean} type Query {catalog:Catalog!,search(query:String!):[Title!]!,trailer(kind:String!,id:Int!):Trailer,health:String!}`,
  resolvers:{Query:{catalog:()=>catalog(),search:(_,{query})=>search(query),trailer:(_,{kind,id})=>{if(!['tv','movie'].includes(kind))throw new Error('Invalid media kind');return trailer(kind,id)},health:()=>token?'ready':'missing TMDB token'}}});
 const yoga=createYoga({schema,graphqlEndpoint:'/graphql',maskedErrors:true});
-createServer(yoga).listen(Number(process.env.PORT||4000),()=>console.log('GraphQL ready at http://localhost:4000/graphql'));
+
+const dist = resolve(process.cwd(), 'dist');
+const mime = {
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.ico': 'image/x-icon',
+  '.json': 'application/json; charset=utf-8'
+};
+
+createServer(async (req, res) => {
+  const pathname = new URL(req.url || '/', 'http://localhost').pathname;
+
+  if (pathname === '/graphql') {
+    return yoga(req, res);
+  }
+
+  if (req.method !== 'GET' && req.method !== 'HEAD') {
+    res.writeHead(405);
+    return res.end();
+  }
+
+  let decoded;
+  try {
+    decoded = decodeURIComponent(pathname);
+  } catch {
+    res.writeHead(400);
+    return res.end();
+  }
+
+  const requested = resolve(dist, '.' + decoded);
+  if (requested !== dist && !requested.startsWith(dist + sep)) {
+    res.writeHead(403);
+    return res.end();
+  }
+
+  const file = decoded === '/' ? resolve(dist, 'index.html') : requested;
+
+  try {
+    const content = await readFile(file);
+    res.writeHead(200, {
+      'Content-Type': mime[extname(file)] || 'application/octet-stream',
+      'X-Content-Type-Options': 'nosniff'
+    });
+    return res.end(req.method === 'HEAD' ? undefined : content);
+  } catch (error) {
+    if (error.code !== 'ENOENT' && error.code !== 'EISDIR') {
+      res.writeHead(500);
+      return res.end();
+    }
+    res.writeHead(404);
+    return res.end('Not found');
+  }
+}).listen(Number(process.env.PORT || 4000), '0.0.0.0', () => {
+  console.log('FRAME / TV server ready');
+});
+
