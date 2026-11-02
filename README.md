@@ -8,6 +8,18 @@ A TV-first, remote-navigable discovery interface built with **React, TypeScript,
 
 [Watch the interactive demo](docs/media/demo.mp4)
 
+## Browse Movies & Series
+
+Explore movie and series collections through a TV-first, remote-navigable interface.
+
+![FRAME / TV Browse Collections](docs/media/browse-collections.png)
+
+## Streaming Player Preview
+
+Watch *Sintel* with adaptive streaming, English subtitles, fullscreen controls, 10-second seeking, and Continue Watching.
+
+![FRAME / TV Streaming Player](docs/media/fullscreen-player.png)
+
 ## Features
 
 - Forty themed discovery rows populated from TMDB metadata (results vary over time).
